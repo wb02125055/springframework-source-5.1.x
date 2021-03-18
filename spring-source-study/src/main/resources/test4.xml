@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean name="person" class="com.wb.spring.finishBeanFactoryInitialization.domain.Person">
+		<property name="name" value="wangbing" />
+		<property name="birthday" value="1998-03-06" />
+	</bean>
+	<bean name="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<bean class="com.wb.spring.finishBeanFactoryInitialization.config.MyConverter" />
+		</property>
+<!--		<meta key="wb" value="bingwang" />-->
+	</bean>
+</beans>

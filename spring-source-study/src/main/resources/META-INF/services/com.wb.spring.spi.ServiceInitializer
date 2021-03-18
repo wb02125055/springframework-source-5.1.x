@@ -1,0 +1,2 @@
+com.wb.spring.spi.impl.DownLoadInitializer
+com.wb.spring.spi.impl.UploadInitializer

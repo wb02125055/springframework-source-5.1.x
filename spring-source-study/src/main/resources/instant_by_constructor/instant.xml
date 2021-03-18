@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="myConsObj" class="com.wb.spring.instantiation_by_constructor.MyConsObj" scope="prototype">
+		<constructor-arg name="id" value="1"/>
+		<constructor-arg name="name" value="wb"/>
+	</bean>
+</beans>

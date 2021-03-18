@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+	   default-autowire="byType">
+	<bean id="myUser" class="com.wb.spring.postProcessBeanFactory.MyUser">
+		<property name="name" value="wangbing"/>
+		<property name="age" value="21"/>
+	</bean>
+	<bean class="com.wb.spring.postProcessBeanFactory.MyApplicationContext"/>
+</beans>

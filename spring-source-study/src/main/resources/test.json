@@ -1,0 +1,26 @@
+{
+  "error": {
+    "root_cause": [
+      {
+        "type": "search_context_exception",
+        "reason": "`from` parameter must be set to 0 when `search_after` is used."
+      }
+    ],
+    "type": "search_phase_execution_exception",
+    "reason": "all shards failed",
+    "phase": "query",
+    "grouped": true,
+    "failed_shards": [
+      {
+        "shard": 0,
+        "index": "product_index",
+        "node": "WkuQMAI5T0uCY-EaJr2jEg",
+        "reason": {
+          "type": "search_context_exception",
+          "reason": "`from` parameter must be set to 0 when `search_after` is used."
+        }
+      }
+    ]
+  },
+  "status": 500
+}

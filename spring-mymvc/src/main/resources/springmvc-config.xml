@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd"
+	   default-autowire="byName">
+
+	<context:component-scan base-package="com.wb.springmvc.controller" />
+
+<!--	<mvc:annotation-driven />-->
+
+	<!--
+		<bean id="simpleUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+			<property name="mappings">
+				<props>
+					<prop key="/userList">userController</prop>
+				</props>
+			</property>
+		</bean>
+		<bean id="userController" class="com.wb.springmvc.controller.UserController" />
+		-->
+</beans>

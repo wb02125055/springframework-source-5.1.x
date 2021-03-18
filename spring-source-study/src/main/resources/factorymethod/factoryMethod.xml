@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="dog1" class="com.wb.spring.factorymethod.StaticFactoryMethod" factory-method="createOldDog">
+		<!-- 此处如果有多个类型不一样的参数。有两种写法：(1) 按照工厂方法的入参顺序写；(2) 如果没按照顺序，则需要指定index -->
+		<constructor-arg index="1" value="oldDog1"/>
+		<constructor-arg index="0" value="1"/>
+	</bean>
+
+	<!-- 实例化工厂对象 -->
+	<bean id="factoryInstance" class="com.wb.spring.factorymethod.InstanceFactoryMethod"/>
+
+	<!-- 通过实例工厂创建对象 -->
+	<bean id="dog2" class="com.wb.spring.factorymethod.OldDog" factory-bean="factoryInstance" factory-method="createOldDog">
+		<constructor-arg value="2"/>
+		<constructor-arg value="oldDog2"/>
+	</bean>
+</beans>

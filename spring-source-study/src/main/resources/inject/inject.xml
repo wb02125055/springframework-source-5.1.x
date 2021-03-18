@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean name="userService" class="com.wb.spring.blog.inject.service.UserService">
+		<property name="userDao" ref="daoFactory" />
+	</bean>
+	<!-- 通过指定的工厂方法来创建userDao对应的bean -->
+	<bean name="daoFactory" factory-bean="userDaoFactory" factory-method="getUserDao"/>
+	<!-- 用来创建UserDao的实例工厂 -->
+	<bean name="userDaoFactory" class="com.wb.spring.blog.inject.factory.UserInstanceFactory" />
+</beans>

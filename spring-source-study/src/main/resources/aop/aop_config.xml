@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd"
+	   default-autowire="byType">
+
+	<!-- 目标对象 -->
+	<bean id="mathCalc1" class="com.wb.spring.share.class2.xml.MathCalc1" />
+
+	<!-- 切面Bean -->
+	<bean id="logAspects" class="com.wb.spring.share.class2.xml.LogAspects" />
+
+	<!-- 通过AnnotationAwareAspectJAutoProxyCreator创建代理
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	-->
+
+	<!-- 切面配置，通过AspectJAwareAdvisorAutoProxyCreator创建代理 -->
+	<aop:config proxy-target-class="true">
+		<aop:aspect ref="logAspects">
+			<!-- 切点 -->
+			<aop:pointcut id="pointCut" expression="execution(public int com.wb.spring.share.class2.xml.MathCalc1.*(..))"/>
+			<!-- 环绕通知 -->
+			<aop:around method="doAround" pointcut-ref="pointCut" />
+			<!-- 前置通知-->
+			<aop:before method="logStart" pointcut-ref="pointCut" />
+			<!-- 后置通知 -->
+			<aop:after method="logEnd" pointcut-ref="pointCut" />
+			<!-- 返回通知 -->
+			<aop:after-returning method="logReturn" pointcut-ref="pointCut" returning="result"/>
+			<!-- 异常通知 -->
+			<aop:after-throwing method="logException" pointcut-ref="pointCut" throwing="exception" />
+		</aop:aspect>
+	</aop:config>
+</beans>
