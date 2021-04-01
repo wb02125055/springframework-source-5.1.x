@@ -7,7 +7,6 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -22,7 +21,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 				type = FilterType.ANNOTATION,
 				classes = {Controller.class})},
 		useDefaultFilters = false)
-@EnableWebMvc
 public class AppConfig extends WebMvcConfigurationSupport {
 	/**
 	 * 配置视图解析器对应的Bean，也就是spring-mvc.xml中经常配置的那一坨
