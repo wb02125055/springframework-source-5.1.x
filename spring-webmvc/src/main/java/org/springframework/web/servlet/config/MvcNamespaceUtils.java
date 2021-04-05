@@ -62,9 +62,16 @@ public abstract class MvcNamespaceUtils {
 
 
 	public static void registerDefaultComponents(ParserContext parserContext, @Nullable Object source) {
+		// 注册BeanNameUrlHandlerMapping组件
 		registerBeanNameUrlHandlerMapping(parserContext, source);
+
+		// 注册HttpRequestHandlerAdaptor组件
 		registerHttpRequestHandlerAdapter(parserContext, source);
+
+		// 注册SimpleControllerHandlerAdaptor组件
 		registerSimpleControllerHandlerAdapter(parserContext, source);
+
+		// 注册HandlerMappingIntrospector组件
 		registerHandlerMappingIntrospector(parserContext, source);
 	}
 
@@ -123,6 +130,7 @@ public abstract class MvcNamespaceUtils {
 	 * name unless already registered.
 	 */
 	private static void registerBeanNameUrlHandlerMapping(ParserContext context, @Nullable Object source) {
+		// beanName: org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping
 		if (!context.getRegistry().containsBeanDefinition(BEAN_NAME_URL_HANDLER_MAPPING_BEAN_NAME)) {
 			RootBeanDefinition mappingDef = new RootBeanDefinition(BeanNameUrlHandlerMapping.class);
 			mappingDef.setSource(source);

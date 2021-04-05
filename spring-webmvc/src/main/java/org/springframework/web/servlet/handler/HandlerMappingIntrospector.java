@@ -183,20 +183,28 @@ public class HandlerMappingIntrospector
 		Properties props;
 		String path = "DispatcherServlet.properties";
 		try {
+			// 加载默认的DispatcherServlet.properties中的HandlerMapping的默认实现
 			Resource resource = new ClassPathResource(path, DispatcherServlet.class);
+			// 加载properties配置文件
 			props = PropertiesLoaderUtils.loadProperties(resource);
 		}
 		catch (IOException ex) {
 			throw new IllegalStateException("Could not load '" + path + "': " + ex.getMessage());
 		}
 
+		// 初始化HandlerMapping的默认实现
 		String value = props.getProperty(HandlerMapping.class.getName());
 		String[] names = StringUtils.commaDelimitedListToStringArray(value);
 		List<HandlerMapping> result = new ArrayList<>(names.length);
 		for (String name : names) {
 			try {
+				// 通过名称加载Class类
 				Class<?> clazz = ClassUtils.forName(name, DispatcherServlet.class.getClassLoader());
+
+				// 通过创建Bean的标准流程来创建HandlerMapping类型的Bean
 				Object mapping = applicationContext.getAutowireCapableBeanFactory().createBean(clazz);
+
+				// 将创建好的Bean放入到result集合中
 				result.add((HandlerMapping) mapping);
 			}
 			catch (ClassNotFoundException ex) {

@@ -95,6 +95,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	@Nullable
 	private HandlerMethodMappingNamingStrategy<T> namingStrategy;
 
+	// 请求映射器注册中心
+	//    用来保存请求的映射和具体处理器
 	private final MappingRegistry mappingRegistry = new MappingRegistry();
 
 

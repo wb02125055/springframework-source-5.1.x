@@ -201,9 +201,13 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
 		RuntimeBeanReference contentNegotiationManager = getContentNegotiationManager(element, source, context);
 
+
+		// 创建用于解气请求与处理器的映射关系的Bean。
+		//    包括: 解析@Controller的Bean以及初始化@RequestMapping中的uri和处理器Handler的关系，通过在InitializingBean扩展点的afterProperties方法中实现
 		RootBeanDefinition handlerMappingDef = new RootBeanDefinition(RequestMappingHandlerMapping.class);
 		handlerMappingDef.setSource(source);
 		handlerMappingDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		// order的值越小，具有的优先级越高
 		handlerMappingDef.getPropertyValues().add("order", 0);
 
 		handlerMappingDef.getPropertyValues().add("contentNegotiationManager", contentNegotiationManager);
@@ -218,6 +222,8 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
 		RuntimeBeanReference corsRef = MvcNamespaceUtils.registerCorsConfigurations(null, context, source);
 		handlerMappingDef.getPropertyValues().add("corsConfigurations", corsRef);
+
+
 
 		// 获取自定义的转换器对象引用
 		RuntimeBeanReference conversionService = getConversionService(element, source, context);
@@ -241,11 +247,15 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		ManagedList<?> argumentResolvers = getArgumentResolvers(element, context);
 		ManagedList<?> returnValueHandlers = getReturnValueHandlers(element, context);
 
+		// 获取用于实现请求异步的超时时间
 		String asyncTimeout = getAsyncTimeout(element);
+		// 获取用于实现请求异步的任务执行器
 		RuntimeBeanReference asyncExecutor = getAsyncExecutor(element);
+
 		ManagedList<?> callableInterceptors = getCallableInterceptors(element, source, context);
 		ManagedList<?> deferredResultInterceptors = getDeferredResultInterceptors(element, source, context);
 
+		// 创建请求映射器对应的适配器，用于示例来处理http请求
 		RootBeanDefinition handlerAdapterDef = new RootBeanDefinition(RequestMappingHandlerAdapter.class);
 		handlerAdapterDef.setSource(source);
 		handlerAdapterDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
@@ -330,6 +340,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		context.registerComponent(new BeanComponentDefinition(defaultExceptionResolver, defaultExResolverName));
 
 		// Ensure BeanNameUrlHandlerMapping (SPR-8289) and default HandlerAdapters are not "turned off"
+		// 注册springMvc的默认组件
 		MvcNamespaceUtils.registerDefaultComponents(context, source);
 
 		context.popAndRegisterContainingComponent();
