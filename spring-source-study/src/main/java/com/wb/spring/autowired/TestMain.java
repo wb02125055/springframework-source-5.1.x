@@ -15,7 +15,6 @@ public class TestMain {
 
 //		UserDao userDao = acx.getBean(UserDao.class);
 //		System.out.println(userDao);
-
 		UserService userService = acx.getBean(UserService.class);
 		userService.printUserDao();
 	}

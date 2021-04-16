@@ -17,7 +17,7 @@ public class ApplicationContextUtils implements ApplicationContextAware, BeanNam
 
 	@Override
 	public void setBeanName(String name) {
-		System.out.println("beanNameAware...");
+//		System.out.println("beanNameAware...");
 	}
 
 	private static ApplicationContext applicationContext;

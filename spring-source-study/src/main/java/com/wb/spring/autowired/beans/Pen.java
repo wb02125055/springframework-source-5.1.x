@@ -18,13 +18,13 @@ public class Pen implements ApplicationContextAware,BeanNameAware, EmbeddedValue
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		System.out.println("获取到的当前IOC容器对象为：" + applicationContext);
+//		System.out.println("获取到的当前IOC容器对象为：" + applicationContext);
 		this.applicationContext = applicationContext;
 	}
 
 	@Override
 	public void setBeanName(String name) {
-		System.out.println("当前Bean的名称为：" + name);
+//		System.out.println("当前Bean的名称为：" + name);
 	}
 
 	@Override

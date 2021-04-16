@@ -1,11 +1,9 @@
 package com.wb.spring.autowired.dao;
 
-import org.springframework.stereotype.Repository;
-
 /**
  * Created by wangbin33 on 2020/3/3.
  */
-@Repository("userDao")
+//@Component("userDao")
 public class UserDao {
 
 	private String flag = "1";
