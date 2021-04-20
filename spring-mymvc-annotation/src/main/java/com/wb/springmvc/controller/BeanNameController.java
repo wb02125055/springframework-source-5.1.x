@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
  *
  * 该种方式可以直接通过父类调用子类重写的方法即可，但是一个类只能对应一个访问路径
  */
-@Component("/student")
-public class BeanNameController implements Controller {
-	@Nullable
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return null;
-	}
-}
+//@Component("/student")
+//public class BeanNameController implements Controller {
+//	@Nullable
+//	@Override
+//	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		return null;
+//	}
+//}
