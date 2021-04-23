@@ -536,10 +536,13 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// 初始化请求处理器适配器的异常处理器组件
 		initHandlerExceptionResolvers(context);
+
 		// 初始化视图名称转换器组件
 		initRequestToViewNameTranslator(context);
+
 		// 初始化视图解析器组件
 		initViewResolvers(context);
+
 		// 初始化FlashMap管理器组件，用来在重定向过程中携带数据
 		initFlashMapManager(context);
 	}
