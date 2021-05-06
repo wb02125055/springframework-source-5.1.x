@@ -530,6 +530,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// ****** 初始化请求处理HandlerMapping器组件 ******
 		initHandlerMappings(context);
+
 		// ****** 初始化请求处理器适配器组件 ******
 		initHandlerAdapters(context);
 
@@ -656,8 +657,11 @@ public class DispatcherServlet extends FrameworkServlet {
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
 		if (this.handlerMappings == null) {
+
 			// 使用默认的handlerMappings
+			// 默认的HandlerMapping有两个，一个是BeanNameUrlHandlerMapping，另外一个是RequestMappingHandlerMapping
 			this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
+
 			if (logger.isTraceEnabled()) {
 				logger.trace("No HandlerMappings declared for servlet '" + getServletName() +
 						"': using default strategies from DispatcherServlet.properties");
