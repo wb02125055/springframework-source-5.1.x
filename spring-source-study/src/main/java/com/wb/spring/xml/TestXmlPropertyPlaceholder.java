@@ -23,14 +23,9 @@ import org.springframework.core.io.ClassPathResource;
 public class TestXmlPropertyPlaceholder {
 	public static void main(String[] args) {
 //		ApplicationContext acx = new MyXmlApplicationContext("spring-all.xml");
-		ApplicationContext acx = new ClassPathXmlApplicationContext("spring-${user.name}.xml");
-		Object menu = acx.getBean("menu");
-		Object otherProcessor = acx.getBean("otherProcessor");
-		System.out.println(menu);
-		System.out.println(otherProcessor);
+		ApplicationContext acx = new ClassPathXmlApplicationContext("spring-all.xml");
+		Object myProcessor = acx.getBean("myProcessor");
+		System.out.println(myProcessor);
 
-//		BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("spring-all.xml"));
-//		Object result = beanFactory.getBean("testBean");
-//		System.out.println(result);
 	}
 }

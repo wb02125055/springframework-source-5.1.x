@@ -59,6 +59,7 @@ public abstract class AbstractCacheManager implements CacheManager, Initializing
 	 * @see #loadCaches()
 	 */
 	public void initializeCaches() {
+		// 获取cacheManager中的caches缓存对象
 		Collection<? extends Cache> caches = loadCaches();
 
 		synchronized (this.cacheMap) {

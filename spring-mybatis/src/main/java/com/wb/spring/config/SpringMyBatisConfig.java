@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 
 /**
  * @author wangbin33
- * @date 2020/5/10 22:25
+ * date 2020/5/10 22:25
  */
 @Configuration
 @ComponentScan(basePackages = {"com.wb.spring"})
