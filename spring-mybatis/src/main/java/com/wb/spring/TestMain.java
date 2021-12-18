@@ -16,13 +16,9 @@ public class TestMain {
 	public static void main(String[] args) {
 		ApplicationContext acx = new AnnotationConfigApplicationContext(SpringMyBatisConfig.class);
 		UserMapper userMapper = acx.getBean(UserMapper.class);
-		User user = userMapper.findUserById(1);
-		System.out.println(user);
-
-//		String a = new String("aaa");
-		String a = new String(new char[] {'a','b','c'});
-
-
-
+		for (int i = 0 ; i < 100; i++) {
+			User user = userMapper.findUserById(i);
+			System.out.println(user);
+		}
 	}
 }
