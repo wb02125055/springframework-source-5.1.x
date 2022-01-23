@@ -218,6 +218,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 		ClassLoader cl = ClassPathScanningCandidateComponentProvider.class.getClassLoader();
 		try {
+			// 加载JSR-250中的@ManagedBean注解，可以通过@ManagedBean标注一个组件
 			this.includeFilters.add(new AnnotationTypeFilter(
 					((Class<? extends Annotation>) ClassUtils.forName("javax.annotation.ManagedBean", cl)),
 					false));
@@ -227,6 +228,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 			// JSR-250 1.1 API (as included in Java EE 6) not available - simply skip.
 		}
 		try {
+			// 加载JSR-330中的@Named注解，可以通过@Named标注一个Bean组件
 			this.includeFilters.add(new AnnotationTypeFilter(
 					((Class<? extends Annotation>) ClassUtils.forName("javax.inject.Named", cl)),
 					false));

@@ -236,6 +236,9 @@ public abstract class AnnotationConfigUtils {
 
 		// 判断bean定义注册中心中是否包括名称为org.springframework.context.event.internalEventListenerProcessor的Bean定义，
 		// 如果不包括，向bean定义注册中心注册类型为EventListenerMethodProcessor的Bean定义.
+
+		// 用途：EventListenerMethodProcessor后置处理器提供对@EventListener注解的支持。
+		//  @EventListener是在spring4.2之后出现的，可以在一个Bean的方法上使用@EventListener注解来自动注册一个ApplicationListener。
 		if (!registry.containsBeanDefinition(EVENT_LISTENER_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(EventListenerMethodProcessor.class);
 			def.setSource(source);
@@ -244,9 +247,6 @@ public abstract class AnnotationConfigUtils {
 
 		// 判断bean定义注册中心中是否包括名称为org.springframework.context.event.internalEventListenerFactory的Bean定义，
 		// 如果不包括，向bean定义注册中心注册类型为DefaultEventListenerFactory的Bean定义.
-
-		// 用途：EventListenerMethodProcessor后置处理器提供对@EventListener注解的支持。
-		//  @EventListener是在spring4.2之后出现的，可以在一个Bean的方法上使用@EventListener注解来自动注册一个ApplicationListener。
 		if (!registry.containsBeanDefinition(EVENT_LISTENER_FACTORY_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(DefaultEventListenerFactory.class);
 			def.setSource(source);
@@ -270,6 +270,8 @@ public abstract class AnnotationConfigUtils {
 
 		// 将bean定义注册到bean定义注册中心的map集合中。即：beanDefinitionMap中
 		registry.registerBeanDefinition(beanName, definition);
+
+		// 返回一个包装类，里面包括bean的名称和bean的定义
 		return new BeanDefinitionHolder(definition, beanName);
 	}
 
@@ -297,6 +299,7 @@ public abstract class AnnotationConfigUtils {
 	 * @param metadata 注解元数据信息
 	 */
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
+		// 解析@Lazy注解
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
 		if (lazy != null) {
 			abd.setLazyInit(lazy.getBoolean("value"));
@@ -307,19 +310,21 @@ public abstract class AnnotationConfigUtils {
 				abd.setLazyInit(lazy.getBoolean("value"));
 			}
 		}
-
+		// 解析@Primary注解
 		if (metadata.isAnnotated(Primary.class.getName())) {
 			abd.setPrimary(true);
 		}
+		// 解析@DependsOn注解
 		AnnotationAttributes dependsOn = attributesFor(metadata, DependsOn.class);
 		if (dependsOn != null) {
 			abd.setDependsOn(dependsOn.getStringArray("value"));
 		}
-
+		// 解析@Role注解
 		AnnotationAttributes role = attributesFor(metadata, Role.class);
 		if (role != null) {
 			abd.setRole(role.getNumber("value").intValue());
 		}
+		// 解析@Description注解
 		AnnotationAttributes description = attributesFor(metadata, Description.class);
 		if (description != null) {
 			abd.setDescription(description.getString("value"));
