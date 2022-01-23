@@ -158,10 +158,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		this.registry = registry;
-		/**
-		 * 如果useDefaultFilters为true，将会使用默认的过滤规则，即：在includeFilters中会放入从@Component注解继承下来的所有注解.
-		 * 以及JSR-250中的ManagedBean注解和JSR-330中的Named注解
-		 */
+		// 如果useDefaultFilters为true，将会使用默认的过滤规则，即：在includeFilters中会放入从@Component注解继承下来的所有注解.
+		//   以及JSR-250中的ManagedBean注解和JSR-330中的Named注解
 		if (useDefaultFilters) {
 			// 注册默认的filters.包括所有从@Component注解继承下来的注解以及JSR250和JSR330中的Named注解及ManagedBean注解.
 			registerDefaultFilters();
