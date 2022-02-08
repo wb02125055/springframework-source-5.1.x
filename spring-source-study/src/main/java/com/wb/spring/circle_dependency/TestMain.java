@@ -17,6 +17,7 @@ public class TestMain {
 		ApplicationContext acx = new ClassPathXmlApplicationContext(path);
 
 		ClassA classA = (ClassA) acx.getBean("classA");
-		classA.print();
+
+		classA.print("wangbing");
 	}
 }
