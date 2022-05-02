@@ -15,7 +15,7 @@ public class ClassA {
 		this.classB = classB;
 	}
 
-	public void print() {
-		System.out.println("ClassA.classB: " + this.classB);
+	public void print(String name) {
+		System.out.println("ClassA.classB: " + this.classB + ", name: " + name);
 	}
 }
