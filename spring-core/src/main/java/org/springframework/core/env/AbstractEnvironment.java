@@ -112,7 +112,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 */
 	private final MutablePropertySources propertySources = new MutablePropertySources();
 
-	/** 初始化配置文件解析器 */
+	/** 初始化配置文件解析器，在构造函数中进行初始化赋值的 */
 	private final ConfigurablePropertyResolver propertyResolver =
 			new PropertySourcesPropertyResolver(this.propertySources);
 
