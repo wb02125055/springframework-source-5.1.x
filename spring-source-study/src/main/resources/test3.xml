@@ -8,5 +8,5 @@
 		<property name="name" value="wangbing"/>
 		<property name="age" value="21"/>
 	</bean>
-	<bean class="com.wb.spring.postProcessBeanFactory.MyApplicationContext"/>
+<!--	<bean id="myApplicationContext" class="com.wb.spring.postProcessBeanFactory.MyApplicationContext"/>-->
 </beans>

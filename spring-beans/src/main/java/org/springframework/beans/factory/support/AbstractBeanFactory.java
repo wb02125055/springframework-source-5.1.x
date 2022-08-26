@@ -64,6 +64,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @see #createBean
  * @see AbstractAutowireCapableBeanFactory#createBean
  * @see DefaultListableBeanFactory#getBeanDefinition
+ *
+ * 用来整合FactoryBeanRegistrySupport和ConfigurableBeanFactory的功能
  */
 public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory {
 

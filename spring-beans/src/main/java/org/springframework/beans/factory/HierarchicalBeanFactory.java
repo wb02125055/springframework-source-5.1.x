@@ -31,7 +31,7 @@ import org.springframework.lang.Nullable;
  * @since 07.07.2003
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory
  *
- * 用来定义Bean工厂的分层结构。 通过该接口可以获取到Bean工厂的父工厂.
+ * 用来定义Bean工厂的分层结构。 通过该接口可以获取到Bean工厂的父工厂.在BeanFactory的基础上提供对parentFactory的支持
  */
 public interface HierarchicalBeanFactory extends BeanFactory {
 
