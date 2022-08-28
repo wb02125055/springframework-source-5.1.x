@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 测试bean指定多个name -->
+	<bean name="testBean1,testBean2,testBean3" class="com.wb.spring.multipleBeanName.TestBean">
+		<property name="beanName" value="这是测试bean的名称" />
+		<property name="beanNo" value="1" />
+	</bean>
+
+
+
+	<!-- 测试bean指定alias -->
+	<bean id="testBean100" class="com.wb.spring.multipleBeanName.TestBean">
+		<description>这是一个测试的描述</description>
+
+		<meta key="metaKey" value="metaValue" />
+
+		<property name="beanName" value="这是testBean100" />
+		<property name="beanNo" value="2" />
+	</bean>
+	<alias name="testBean100" alias="testBean5" />
+
+	<bean name="beanDef" class="com.wb.spring.multipleBeanName.MyBeanDefinitionRegistryPostProcessor" />
+</beans>

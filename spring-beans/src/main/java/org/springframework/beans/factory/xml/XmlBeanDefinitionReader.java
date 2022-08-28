@@ -304,7 +304,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	@Override
 	public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
-		return loadBeanDefinitions(new EncodedResource(resource));
+		// 可以设置加载资源时所使用的的字符编码
+		EncodedResource encodedResource = new EncodedResource(resource);
+
+		// 通过指定编码的资源来加载bean定义
+		return loadBeanDefinitions(encodedResource);
 	}
 
 	/**
@@ -332,11 +336,14 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		try {
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
+				// InputSource是来源于org.xml.sax包中的，在解析xml文档时会使用到
 				InputSource inputSource = new InputSource(inputStream);
-				// 设置加载到的资源的字符编码
+
+				// 如果设置了字符编码，最后会使用设置设置的字符编码来解析资源
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
+
 				// 执行bean定义加载
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 			}
@@ -396,8 +403,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		try {
 			// 将xml配置文件通过JDK中的JAXP(Java API for XMLProcessing)解析为Document对象
 			Document doc = doLoadDocument(inputSource, resource);
+
 			// 注册bean定义
 			int count = registerBeanDefinitions(doc, resource);
+
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
 			}
@@ -438,8 +447,22 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see DocumentLoader#loadDocument
 	 */
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
-		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
-				getValidationModeForResource(resource), isNamespaceAware());
+		// 获取对xml文件的验证模式
+		//  验证模式通常有两种：DTD(Document Type Definition)和XSD(Xml Schema Definition)，目的是为了验证xml的格式是否正确
+		//  DTD模式判断方式是通过判断xml文件内容中是否包含有"DOCTYPE"字符串来决定
+		int validationMode = getValidationModeForResource(resource);
+
+		// 用来完成DTD或者XSD的寻找过程。因为默认情况下如果需要验证xml的正确性，DTD或者XSD都是从网络上下载的，这样验证的效率得不到保证，
+		//  通过这个方法中的resolveEntity方法来从自定义的项目目录下寻找对应的DTD或者XSD定义，进而完成xml文档的验证
+		EntityResolver entityResolver = getEntityResolver();
+
+		// 指定此代码生成的解析器是否提供对XML命名空间的支持，在构建DocumentBuilderFactory的时候使用
+		boolean isNameSpaceAware = isNamespaceAware();
+
+		// documentLoader模式使用的是DefaultDocumentLoader
+		return this.documentLoader.loadDocument(inputSource, entityResolver,
+				this.errorHandler, validationMode,
+				isNameSpaceAware);
 	}
 
 	/**
@@ -519,12 +542,18 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
-		// 通过反射创建Bean定义文档读取器，默认类型为：DefaultBeanDefinitionDocumentReader
+		// 通过反射创建Bean定义文档读取器，默认类型为：DefaultBeanDefinitionDocumentReader，通过反射创建
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+
 		// 获取之前已经加载的bean定义数量，直接通过beanDefinitionMap.size获取
 		int countBefore = getRegistry().getBeanDefinitionCount();
+
+		// 创建xmlReader上下文对象。这个对象中包括nameSpaceHandlerResolver，nameSpaceHandlerResolver是用来解析命名空间url和命名空间解析类的对应关系
+		XmlReaderContext readerContext = createReaderContext(resource);
+
 		// 执行xml的解析及bean定义注册。在创建bean定义读取器上下文时，会去创建默认的DefaultNamespaceHandlerResolver
-		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
+		documentReader.registerBeanDefinitions(doc, readerContext);
+
 		// 返回本次注册的bean定义的数量
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}
@@ -536,6 +565,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see #setDocumentReaderClass
 	 */
 	protected BeanDefinitionDocumentReader createBeanDefinitionDocumentReader() {
+		// DefaultBeanDefinitionDocumentReader
 		return BeanUtils.instantiateClass(this.documentReaderClass);
 	}
 
@@ -543,8 +573,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * Create the {@link XmlReaderContext} to pass over to the document reader.
 	 */
 	public XmlReaderContext createReaderContext(Resource resource) {
+		// 创建命名空间处理器的解析器，默认类型为DefaultNamespaceHandlerResolver
+		NamespaceHandlerResolver namespaceHandlerResolver = getNamespaceHandlerResolver();
+
+		// 创建XmlReader上下文，注意此处的sourceExtractor类型为NullSourceExtractor
 		return new XmlReaderContext(resource, this.problemReporter, this.eventListener,
-				this.sourceExtractor, this, getNamespaceHandlerResolver());
+				this.sourceExtractor, this, namespaceHandlerResolver);
 	}
 
 	/**

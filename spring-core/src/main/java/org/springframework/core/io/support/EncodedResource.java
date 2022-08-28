@@ -41,14 +41,23 @@ import org.springframework.util.ObjectUtils;
  * @see Resource#getInputStream()
  * @see java.io.Reader
  * @see java.nio.charset.Charset
+ *
+ * 通过传入的资源对象及指定的字符编码，对Resource资源进行包装
  */
 public class EncodedResource implements InputStreamSource {
 
+	/**
+	 * 资源对象
+	 */
 	private final Resource resource;
-
+	/**
+	 * 字符编码名称
+	 */
 	@Nullable
 	private final String encoding;
-
+	/**
+	 * 字符编码类型
+	 */
 	@Nullable
 	private final Charset charset;
 
@@ -137,12 +146,15 @@ public class EncodedResource implements InputStreamSource {
 	 */
 	public Reader getReader() throws IOException {
 		if (this.charset != null) {
+			// 如果指定了编码格式，通过指定的编码格式来加载资源
 			return new InputStreamReader(this.resource.getInputStream(), this.charset);
 		}
 		else if (this.encoding != null) {
+			// 如果指定了编码的名称，通过指定的编码名称来加载资源
 			return new InputStreamReader(this.resource.getInputStream(), this.encoding);
 		}
 		else {
+			// 通过默认的字符编码来加载资源，底层默认使用UTF-8
 			return new InputStreamReader(this.resource.getInputStream());
 		}
 	}

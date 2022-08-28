@@ -139,6 +139,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	public AbstractAutowireCapableBeanFactory() {
 		super();
 
+		// 忽略接口自动装配举例：比如A中有属性B，那么当spring在获取A对应的bean时，如果B属性还没有初始化，正常情况下spring会自动初始化B。但是在某些情况下，B不会被初始化，
+		//   其中的一种情况就是B实现了XXXAware接口，例如BeanNameAware接口。这样做的目的是铜鼓另外一种依赖注入的方式来解析Application上下文中注册依赖
+
 		// 在Bean自动装配时自动忽略BeanNameAware子类的注入
 		ignoreDependencyInterface(BeanNameAware.class);
 

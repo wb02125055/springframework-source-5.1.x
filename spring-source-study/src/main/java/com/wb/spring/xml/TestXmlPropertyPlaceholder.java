@@ -26,6 +26,5 @@ public class TestXmlPropertyPlaceholder {
 		ApplicationContext acx = new ClassPathXmlApplicationContext("spring-all.xml");
 		Object myProcessor = acx.getBean("myProcessor");
 		System.out.println(myProcessor);
-
 	}
 }

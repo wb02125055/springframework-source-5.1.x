@@ -56,8 +56,9 @@ public abstract class BeanDefinitionReaderUtils {
 	 */
 	public static AbstractBeanDefinition createBeanDefinition(
 			@Nullable String parentName, @Nullable String className, @Nullable ClassLoader classLoader) throws ClassNotFoundException {
-
+		// 创建bean定义对象
 		GenericBeanDefinition bd = new GenericBeanDefinition();
+		// 设置parentName名称
 		bd.setParentName(parentName);
 		if (className != null) {
 			if (classLoader != null) {
@@ -104,11 +105,14 @@ public abstract class BeanDefinitionReaderUtils {
 			BeanDefinition definition, BeanDefinitionRegistry registry, boolean isInnerBean)
 			throws BeanDefinitionStoreException {
 
+		// 获取bean定义中的beanClassName
 		String generatedBeanName = definition.getBeanClassName();
 		if (generatedBeanName == null) {
+			// 如果存在着父bean，则默认生成的名称为："父bean名称" + "$child"
 			if (definition.getParentName() != null) {
 				generatedBeanName = definition.getParentName() + "$child";
 			}
+			// 如果存在着工厂bean，则默认生成的名称为："父工厂bean名称" + "$created"
 			else if (definition.getFactoryBeanName() != null) {
 				generatedBeanName = definition.getFactoryBeanName() + "$created";
 			}
@@ -118,9 +122,11 @@ public abstract class BeanDefinitionReaderUtils {
 					"'class' nor 'parent' nor 'factory-bean' - can't generate bean name");
 		}
 
-		String id = generatedBeanName;
+		String id;
+		// 如果是内部bean
 		if (isInnerBean) {
 			// Inner bean: generate identity hashcode suffix.
+			// 如果是内部bean，则最后的名称为：  "上述生成的bean的名称" + "#" + bean定义的hashCode
 			id = generatedBeanName + GENERATED_BEAN_NAME_SEPARATOR + ObjectUtils.getIdentityHexString(definition);
 		}
 		else {

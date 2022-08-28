@@ -29,6 +29,13 @@ import org.springframework.beans.factory.config.BeanDefinition;
  */
 public class DefaultBeanNameGenerator implements BeanNameGenerator {
 
+	/**
+	 * @param definition the bean definition to generate a name for
+	 * @param registry the bean definition registry that the given definition
+	 * is supposed to be registered with
+	 *
+	 * 生成bean名称
+	 */
 	@Override
 	public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
 		return BeanDefinitionReaderUtils.generateBeanName(definition, registry);

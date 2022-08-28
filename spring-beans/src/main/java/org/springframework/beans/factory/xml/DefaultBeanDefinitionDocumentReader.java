@@ -110,8 +110,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	@Override
 	public void registerBeanDefinitions(Document doc, XmlReaderContext readerContext) {
 		this.readerContext = readerContext;
+
+		// 获取xml对应的文档节点对象，此处表示xml文档的根节点对象
+		Element documentElement = doc.getDocumentElement();
+
 		// 执行bean定义的注册操作
-		doRegisterBeanDefinitions(doc.getDocumentElement());
+		doRegisterBeanDefinitions(documentElement);
 	}
 
 	/**
@@ -144,15 +148,25 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// then ultimately reset this.delegate back to its original (parent) reference.
 		// this behavior emulates a stack of delegates without actually necessitating one.
 		BeanDefinitionParserDelegate parent = this.delegate;
+
 		// 创建bean定义解析器委托对象，同时解析<beans/>标签中的一些全局属性
 		this.delegate = createDelegate(getReaderContext(), root, parent);
 
 		if (this.delegate.isDefaultNamespace(root)) {
+			// 获取及处理profile标签，<beans profile="dev">dev_config</beans> / <beans profile="production">production_config</beans>
+			//  在一个xml配置文件中，可以同时配置不同环境的bean，在实际开发中，可以根据不通的环境变量，来创建不通环境中所需要的bean
+			// PROFILE_ATTRIBUTE: "profile"
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
 			if (StringUtils.hasText(profileSpec)) {
+
+				// profile属性的值可以通过逗号隔开，同时配置多个
 				String[] specifiedProfiles = StringUtils.tokenizeToStringArray(profileSpec, BeanDefinitionParserDelegate.MULTI_VALUE_ATTRIBUTE_DELIMITERS);
+
 				// We cannot use Profiles.of(...) since profile expressions are not supported
 				// in XML config. See SPR-12458 for details.
+
+				// 判断该当前的profile的激活状态，包括 "!profile" 和 "profile"两种情况。
+				// 	如果没有被激活，"!profile"会返回true，"profile"返回false；如果激活，"profile"返回true，"!profile"返回false
 				if (!getReaderContext().getEnvironment().acceptsProfiles(specifiedProfiles)) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Skipped XML bean definition file due to specified profiles [" + profileSpec +
@@ -162,13 +176,15 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				}
 			}
 		}
-		// 在spring解析xml之前，处理一些自定义的元素类型
+
+		//  该方法体现了面向对象设计方法中的面向继承设计方法，留给子类来实现
+		// 在spring解析xml之前，处理一些自定义的逻辑【模板设计模式】
 		preProcessXml(root);
 
 		// 解析bean定义
 		parseBeanDefinitions(root, this.delegate);
 
-		// 在spring解析xml之后，处理一些自定义的元素类型
+		// 在spring解析xml之后，处理一些自定义的逻辑
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -200,18 +216,18 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
-						// 解析Spring中的默认xml节点(import,alias,beans)
+						// 解析spring中支持的原生标签节点(import,alias,beans)
 						parseDefaultElement(ele, delegate);
 					}
 					else {
-						// 解析自定义标签内容
+						// 解析扩展(自定义)标签内容，例如：<context:component-scan base-package="com.wb.spring"/>这种标签
 						delegate.parseCustomElement(ele);
 					}
 				}
 			}
 		}
 		else {
-			// 如果不是spring默认的命名空间，则作为扩展标签进行解析.
+			// 如果不是spring默认的命名空间，则作为扩展(自定义)标签进行解析.
 			delegate.parseCustomElement(root);
 		}
 	}
@@ -240,13 +256,16 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * from the given resource into the bean factory.
 	 */
 	protected void importBeanDefinitionResource(Element ele) {
+		// 获取resource属性的内容
 		String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
+		// 如果只有import标签，但是标签中没有resource属性值，直接抛出异常
 		if (!StringUtils.hasText(location)) {
 			getReaderContext().error("Resource location must not be empty", ele);
 			return;
 		}
 
 		// Resolve system properties: e.g. "${user.dir}"
+		// 解析resource所制定的资源文件的路径，比如路径中的占位符<import resource="user-${env}.xml" />
 		location = getReaderContext().getEnvironment().resolveRequiredPlaceholders(location);
 
 		Set<Resource> actualResources = new LinkedHashSet<>(4);
@@ -263,8 +282,10 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 
 		// Absolute or relative?
+		// 如果是绝对路径，比如以classpath*:开头的
 		if (absoluteLocation) {
 			try {
+				// 解析import引入的资源中的bean定义，并返回解析到的bean定义的数量
 				int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
 				if (logger.isTraceEnabled()) {
 					logger.trace("Imported " + importCount + " bean definitions from URL location [" + location + "]");
@@ -286,6 +307,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				// 重新加载通过import标签导入的配置文件中的bean定义
 				if (relativeResource.exists()) {
 					importCount = getReaderContext().getReader().loadBeanDefinitions(relativeResource);
+
+					// 将import指定的resource添加到actualResources
 					actualResources.add(relativeResource);
 				}
 				else {
@@ -305,17 +328,27 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						"Failed to import bean definitions from relative location [" + location + "]", ele, ex);
 			}
 		}
+		// 将actualResource转换为数组
 		Resource[] actResArray = actualResources.toArray(new Resource[0]);
-		getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
+
+		// 从element对象中提取对应的元数据信息，底层使用的是NullSourceExtractor，默认返回的是null
+		Object extractSourceResult = extractSource(ele);
+
+		// 触发import处理事件
+		getReaderContext().fireImportProcessed(location, actResArray, extractSourceResult);
 	}
 
 	/**
 	 * Process the given alias element, registering the alias with the registry.
 	 */
 	protected void processAliasRegistration(Element ele) {
+		// 获取name属性的值
 		String name = ele.getAttribute(NAME_ATTRIBUTE);
+		// 获取alias属性的值
 		String alias = ele.getAttribute(ALIAS_ATTRIBUTE);
 		boolean valid = true;
+
+		// 校验name和alias是否合法
 		if (!StringUtils.hasText(name)) {
 			getReaderContext().error("Name must not be empty", ele);
 			valid = false;
@@ -324,14 +357,18 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			getReaderContext().error("Alias must not be empty", ele);
 			valid = false;
 		}
+
+		// 如果name和alias都合法的话，则会将alias注册到别名注册中心
 		if (valid) {
 			try {
+				// 将别名注册到AliasRegistry，BeanDefinitionRegistry继承了AliasRegistry接口，默认就有了registerAlias方法
 				getReaderContext().getRegistry().registerAlias(name, alias);
 			}
 			catch (Exception ex) {
 				getReaderContext().error("Failed to register alias '" + alias +
 						"' for bean with name '" + name + "'", ele, ex);
 			}
+			// 触发别名注册处理事件，底层模式实现是no-op
 			getReaderContext().fireAliasRegistered(name, alias, extractSource(ele));
 		}
 	}

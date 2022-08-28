@@ -190,6 +190,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
 	@Override
 	public BeanNameGenerator getBeanNameGenerator() {
+		// 默认的beanNameGenerator是DefaultBeanNameGenerator
 		return this.beanNameGenerator;
 	}
 

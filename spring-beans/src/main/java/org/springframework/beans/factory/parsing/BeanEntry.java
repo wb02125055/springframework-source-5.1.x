@@ -24,7 +24,7 @@ package org.springframework.beans.factory.parsing;
  */
 public class BeanEntry implements ParseState.Entry {
 
-	private String beanDefinitionName;
+	private final String beanDefinitionName;
 
 
 	/**

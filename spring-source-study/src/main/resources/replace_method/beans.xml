@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 运行时用新的方法动态替换现有的方法 -->
+
+	<bean id="testReplaceMethod" class="com.wb.spring.replace_method.TestReplaceMethod">
+		<replaced-method name="replaceMe" replacer="replacer" />
+	</bean>
+
+	<bean id="replacer" class="com.wb.spring.replace_method.TestMethodReplacer" />
+</beans>

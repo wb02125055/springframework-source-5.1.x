@@ -169,7 +169,11 @@ public class ReaderContext {
 	 * Fire an alias-registered event.
 	 */
 	public void fireAliasRegistered(String beanName, String alias, @Nullable Object source) {
-		this.eventListener.aliasRegistered(new AliasDefinition(beanName, alias, source));
+		// 创建AliasDefinition对象
+		AliasDefinition aliasDefinition = new AliasDefinition(beanName, alias, source);
+
+		// 默认使用的eventListener是EmptyReaderEventListener类型，方法中没有任何实现逻辑
+		this.eventListener.aliasRegistered(aliasDefinition);
 	}
 
 	/**
@@ -183,7 +187,13 @@ public class ReaderContext {
 	 * Fire an import-processed event.
 	 */
 	public void fireImportProcessed(String importedResource, Resource[] actualResources, @Nullable Object source) {
-		this.eventListener.importProcessed(new ImportDefinition(importedResource, actualResources, source));
+
+		// ImportDefinition在此处仅仅是用来包装属性的一个普通对象，类似于开发过程中的DTO的含义
+		ImportDefinition importDefinition = new ImportDefinition(importedResource, actualResources, source);
+
+		// 触发import处理事件，此处的eventListener对象类型是EmptyReaderEventListener，在XmlBeanDefinitionReader的registerBeanDefinitions中设置进去的
+		//  eventListener的默认类型是EmptyReaderEventListener，里面没有任何操作，留给子类的扩展点
+		this.eventListener.importProcessed(importDefinition);
 	}
 
 

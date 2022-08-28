@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<!--
+		通过lookup-method可以动态地将getBean的返回值替换为任意从User继承来的对象
+		如果增加了一个student类，则可以直接直接让student继承User类，并将<lookup-method>中的bean替换为student即可，可以很大程度地解耦
+	-->
+
+	<bean id="lookUpBeanTest" class="com.wb.spring.lookup_method.LookUpBeanTest">
+		<lookup-method name="getBean" bean="teacher" />
+	</bean>
+
+	<bean id="teacher" class="com.wb.spring.lookup_method.Teacher" />
+</beans>

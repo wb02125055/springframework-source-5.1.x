@@ -332,11 +332,14 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	public boolean acceptsProfiles(String... profiles) {
 		Assert.notEmpty(profiles, "Must specify at least one profile");
 		for (String profile : profiles) {
+			// 如果是以!开头的
 			if (StringUtils.hasLength(profile) && profile.charAt(0) == '!') {
+				// 如果没有激活，则返回true
 				if (!isProfileActive(profile.substring(1))) {
 					return true;
 				}
 			}
+			// 如果当前的profile被激活，则返回true
 			else if (isProfileActive(profile)) {
 				return true;
 			}
@@ -356,8 +359,13 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @throws IllegalArgumentException per {@link #validateProfile(String)}
 	 */
 	protected boolean isProfileActive(String profile) {
+		// 校验profile是否合法
 		validateProfile(profile);
+
+		// 获取当前所有已经激活的profiles
 		Set<String> currentActiveProfiles = doGetActiveProfiles();
+
+		// 如果profile在当前已经激活的profile中或者是默认的profile中包括当前的profile，则返回true
 		return (currentActiveProfiles.contains(profile) ||
 				(currentActiveProfiles.isEmpty() && doGetDefaultProfiles().contains(profile)));
 	}
