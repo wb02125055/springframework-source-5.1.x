@@ -40,6 +40,8 @@ public interface TaskDecorator {
 	 * {@code Runnable} for actual execution.
 	 * @param runnable the original {@code Runnable}
 	 * @return the decorated {@code Runnable}
+	 *
+	 * 用来装饰给定的线程对象
 	 */
 	Runnable decorate(Runnable runnable);
 

@@ -25,7 +25,8 @@ package org.springframework.aop.framework;
  * @since 2.0.3
  * @see org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator
  * @see org.springframework.aop.scope.ScopedProxyFactoryBean
+ *
+ * 这是一个标记接口(markerInterface)，用来标记某个bean是SpringAOP基础设施的一部分
  */
 public interface AopInfrastructureBean {
-
 }

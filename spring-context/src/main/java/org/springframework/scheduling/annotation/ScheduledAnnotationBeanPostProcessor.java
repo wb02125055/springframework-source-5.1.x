@@ -101,9 +101,28 @@ import org.springframework.util.StringValueResolver;
  * @see AsyncAnnotationBeanPostProcessor
  */
 public class ScheduledAnnotationBeanPostProcessor
-		implements ScheduledTaskHolder, MergedBeanDefinitionPostProcessor, DestructionAwareBeanPostProcessor,
-		Ordered, EmbeddedValueResolverAware, BeanNameAware, BeanFactoryAware, ApplicationContextAware,
-		SmartInitializingSingleton, ApplicationListener<ContextRefreshedEvent>, DisposableBean {
+		// getScheduledTasks()，用于返回当前已经被调度的任务实例
+		implements ScheduledTaskHolder,
+		// 继承了BeanPostProcessor，本身包含的方法是：postProcessMergedBeanDefinition 和 resetBeanDefinition
+		MergedBeanDefinitionPostProcessor,
+		// 继承了BeanPostProcessor，本身包含的方法是：postProcessBeforeDestruction(bean实例销毁之前调用)，requiresDestruction
+		DestructionAwareBeanPostProcessor,
+		// 用来支持排序
+		Ordered,
+		// Aware接口，用来给某个实例中注入StringValueResolver实例，一般用来解析某个变量所对应的占位符，包含的方法是：resolveStringValue
+		EmbeddedValueResolverAware,
+		// Aware接口，用来给某个实例中注入beanName属性
+		BeanNameAware,
+		// Aware接口，用来给某个实例中注入BeanFactory对象，通过beanFactory可以获取到容器中指定名称或者指定类型的bean或者bean的别名
+		BeanFactoryAware,
+		// Aware接口，用来给某个实例中注入ApplicationContext对象，这个对象为容器对象，通过这个对象可以获取到容器中几乎任何的内容
+		ApplicationContextAware,
+		// 是一个回调接口，包含的方法是：afterSingletonsInstantiated。一般是容器中所有的单实例Bean都创建完成之后，会回调该接口
+		SmartInitializingSingleton,
+		// 继承了JDK中的EventListener接口，包含的方法是：onApplicationEvent，用来给容器中发布事件
+		ApplicationListener<ContextRefreshedEvent>,
+		// bean的销毁方法，包含的方法是：destroy，在容器关闭时，如果某个bean实现了该接口，则spring会自动回调该bean的destroy方法
+		DisposableBean {
 
 	/**
 	 * The default name of the {@link TaskScheduler} bean to pick up: {@value}.

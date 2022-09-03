@@ -26,12 +26,16 @@ import org.springframework.lang.Nullable;
  *
  * @author Juergen Hoeller
  * @since 3.0
+ *
+ * 用来描述任务最后一次执行时间以及最后一次完成时间的上下文对象
  */
 public interface TriggerContext {
 
 	/**
 	 * Return the last <i>scheduled</i> execution time of the task,
 	 * or {@code null} if not scheduled before.
+	 *
+	 * 返回任务最后一次被调度执行的时间
 	 */
 	@Nullable
 	Date lastScheduledExecutionTime();
@@ -39,6 +43,7 @@ public interface TriggerContext {
 	/**
 	 * Return the last <i>actual</i> execution time of the task,
 	 * or {@code null} if not scheduled before.
+	 * 返回任务最后一次真实执行的时间
 	 */
 	@Nullable
 	Date lastActualExecutionTime();
@@ -46,6 +51,7 @@ public interface TriggerContext {
 	/**
 	 * Return the last completion time of the task,
 	 * or {@code null} if not scheduled before.
+	 * 返回任务最后一次完成的时间
 	 */
 	@Nullable
 	Date lastCompletionTime();

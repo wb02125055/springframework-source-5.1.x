@@ -37,6 +37,8 @@ public interface Trigger {
 	 * and last completion time
 	 * @return the next execution time as defined by the trigger,
 	 * or {@code null} if the trigger won't fire anymore
+	 *
+	 * 通过给定的Trigger上下文来(上下文中包括：最后一次被调度执行的时间、最后一次真正执行的时间、最后一次执行完成的时间)获取任务下一次执行的时间
 	 */
 	@Nullable
 	Date nextExecutionTime(TriggerContext triggerContext);

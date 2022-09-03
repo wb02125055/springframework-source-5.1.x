@@ -75,13 +75,17 @@ public class TaskExecutorFactoryBean implements
 
 	@Override
 	public void setBeanName(String beanName) {
+		// 在创建factoryBean的时候进行回调
 		this.beanName = beanName;
 	}
 
 
 	@Override
 	public void afterPropertiesSet() {
+		// 在创建factoryBean的时候进行回调
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
+		// 设置线程池相关参数
 		determinePoolSizeRange(executor);
 		if (this.queueCapacity != null) {
 			executor.setQueueCapacity(this.queueCapacity);
@@ -95,32 +99,44 @@ public class TaskExecutorFactoryBean implements
 		if (this.beanName != null) {
 			executor.setThreadNamePrefix(this.beanName + "-");
 		}
+		// 执行executor的afterPropertiesSet方法，初始化线程池
 		executor.afterPropertiesSet();
 		this.target = executor;
 	}
 
 	private void determinePoolSizeRange(ThreadPoolTaskExecutor executor) {
+		// 如果设置了poolSize
 		if (StringUtils.hasText(this.poolSize)) {
 			try {
 				int corePoolSize;
 				int maxPoolSize;
 				int separatorIndex = this.poolSize.indexOf('-');
 				if (separatorIndex != -1) {
-					corePoolSize = Integer.valueOf(this.poolSize.substring(0, separatorIndex));
-					maxPoolSize = Integer.valueOf(this.poolSize.substring(separatorIndex + 1, this.poolSize.length()));
+					// 获取核心线程数和最大线程数，通过xml配置文件中的pool-size="5-10"来获取，5表示核心线程数，10表示最大线程数
+					corePoolSize = Integer.parseInt(this.poolSize.substring(0, separatorIndex));
+					maxPoolSize = Integer.parseInt(this.poolSize.substring(separatorIndex + 1));
+
+					// 如果核心线程数大于最大线程数，则抛出异常
 					if (corePoolSize > maxPoolSize) {
 						throw new IllegalArgumentException(
 								"Lower bound of pool-size range must not exceed the upper bound");
 					}
+					// 如果没有设置线程池工作队列的容量
 					if (this.queueCapacity == null) {
 						// No queue-capacity provided, so unbounded
 						if (corePoolSize == 0) {
+
+							// 如果同时设置了核心线程数和最大线程数，而且核心线程数设置的值为0，则会自动将最大线程数设置和和线程数相同，而且允许核心线程超时
+
 							// Actually set 'corePoolSize' to the upper bound of the range
 							// but allow core threads to timeout...
+
+							// 表示当线程池中没有任务时，将自动销毁线程池中所有的线程
 							executor.setAllowCoreThreadTimeOut(true);
 							corePoolSize = maxPoolSize;
 						}
 						else {
+							// 如果同时设置了核心线程数和最大线程数，但是没有设置queue-capacity，则直接跑出异常
 							// Non-zero lower bound implies a core-max size range...
 							throw new IllegalArgumentException(
 									"A non-zero lower bound for the size range requires a queue-capacity value");
@@ -128,10 +144,12 @@ public class TaskExecutorFactoryBean implements
 					}
 				}
 				else {
-					Integer value = Integer.valueOf(this.poolSize);
+					// 如果设置的pool-size为一个具体的数字，则表示核心线程数和最大线程数相同
+					int value = Integer.parseInt(this.poolSize);
 					corePoolSize = value;
 					maxPoolSize = value;
 				}
+				// 设置线程池的核心线程数和最大线程数
 				executor.setCorePoolSize(corePoolSize);
 				executor.setMaxPoolSize(maxPoolSize);
 			}

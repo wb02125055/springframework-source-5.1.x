@@ -211,7 +211,6 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
 		this.taskDecorator = taskDecorator;
 	}
 
-
 	/**
 	 * Note: This method exposes an {@link ExecutorService} to its base class
 	 * but stores the actual {@link ThreadPoolExecutor} handle internally.
@@ -222,9 +221,12 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
 	protected ExecutorService initializeExecutor(
 			ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
 
+		// 创建工作队列
 		BlockingQueue<Runnable> queue = createQueue(this.queueCapacity);
 
 		ThreadPoolExecutor executor;
+
+		// 如果线程对应的装饰器不为null，则通过线程装饰器对线程进行装饰
 		if (this.taskDecorator != null) {
 			executor = new ThreadPoolExecutor(
 					this.corePoolSize, this.maxPoolSize, this.keepAliveSeconds, TimeUnit.SECONDS,
@@ -232,20 +234,23 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
 				@Override
 				public void execute(Runnable command) {
 					Runnable decorated = taskDecorator.decorate(command);
+					// 如果装饰的线程对象和原来的线程对象不相同，则说明线程对象被装饰过，将其放入到decoratedTaskMap中
 					if (decorated != command) {
 						decoratedTaskMap.put(decorated, command);
 					}
+					// 调用父类的execute方法执行线程
 					super.execute(decorated);
 				}
 			};
 		}
 		else {
+			// 如果没有线程的装饰器，则直接创建线程池
 			executor = new ThreadPoolExecutor(
 					this.corePoolSize, this.maxPoolSize, this.keepAliveSeconds, TimeUnit.SECONDS,
 					queue, threadFactory, rejectedExecutionHandler);
 
 		}
-
+		// 如果允许核心线程池超时，则设置线程池的allowCoreThreadTimeOut属性
 		if (this.allowCoreThreadTimeOut) {
 			executor.allowCoreThreadTimeOut(true);
 		}

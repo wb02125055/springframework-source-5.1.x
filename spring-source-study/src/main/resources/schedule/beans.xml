@@ -10,7 +10,9 @@
 	   http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd"
 	   default-autowire="byName" default-lazy-init="false">
+
 	<context:component-scan base-package="com.wb.spring.schedule.xml" />
-	<task:executor id="executor" pool-size="5" rejection-policy="ABORT" />
+	<!-- pool-size中的5表示核心线程数，10表示最大线程数，'-'表示连接符，如果同时设置了核心线程数和最大线程数，则就必须要设置queue-capacity参数，否则会跑出异常 -->
+	<task:executor id="executor" pool-size="5-10" rejection-policy="ABORT" keep-alive="60" queue-capacity="1000" />
 	<task:annotation-driven executor="executor" />
 </beans>

@@ -52,6 +52,7 @@ public class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParse
 		Object source = parserContext.extractSource(element);
 
 		// Register component for the surrounding <task:annotation-driven> element.
+		// 注册<task:annotation-driven /> 元素类型的组件
 		CompositeComponentDefinition compDefinition = new CompositeComponentDefinition(element.getTagName(), source);
 		parserContext.pushContainingComponent(compDefinition);
 
@@ -70,6 +71,7 @@ public class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParse
 						"Only one AsyncAnnotationBeanPostProcessor may exist within the context.", source);
 			}
 			else {
+				// 创建AsyncAnnotationBeanPostProcessor类型的bean定义
 				BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(
 						"org.springframework.scheduling.annotation.AsyncAnnotationBeanPostProcessor");
 				builder.getRawBeanDefinition().setSource(source);
@@ -81,9 +83,10 @@ public class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParse
 				if (StringUtils.hasText(exceptionHandler)) {
 					builder.addPropertyReference("exceptionHandler", exceptionHandler);
 				}
-				if (Boolean.valueOf(element.getAttribute(AopNamespaceUtils.PROXY_TARGET_CLASS_ATTRIBUTE))) {
+				if (Boolean.parseBoolean(element.getAttribute(AopNamespaceUtils.PROXY_TARGET_CLASS_ATTRIBUTE))) {
 					builder.addPropertyValue("proxyTargetClass", true);
 				}
+				// 将bean定义注册到bean定义注册中心
 				registerPostProcessor(parserContext, builder, TaskManagementConfigUtils.ASYNC_ANNOTATION_PROCESSOR_BEAN_NAME);
 			}
 		}
@@ -93,6 +96,7 @@ public class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParse
 					"Only one ScheduledAnnotationBeanPostProcessor may exist within the context.", source);
 		}
 		else {
+			// 创建ScheduledAnnotationBeanPostProcessor类型的bean定义
 			BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(
 					"org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor");
 			builder.getRawBeanDefinition().setSource(source);
@@ -100,6 +104,7 @@ public class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParse
 			if (StringUtils.hasText(scheduler)) {
 				builder.addPropertyReference("scheduler", scheduler);
 			}
+			// 将bean定义注册到bean定义注册中心
 			registerPostProcessor(parserContext, builder, TaskManagementConfigUtils.SCHEDULED_ANNOTATION_PROCESSOR_BEAN_NAME);
 		}
 
@@ -128,10 +133,12 @@ public class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParse
 
 	private static void registerPostProcessor(
 			ParserContext parserContext, BeanDefinitionBuilder builder, String beanName) {
-
+		// 设置bean定义的角色为ROLE_INFRASTRUCTURE，表示为基础设施bean
 		builder.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		// 注册bean定义到bean定义注册中心
 		parserContext.getRegistry().registerBeanDefinition(beanName, builder.getBeanDefinition());
 		BeanDefinitionHolder holder = new BeanDefinitionHolder(builder.getBeanDefinition(), beanName);
+		// 注册解析出来的bean定义
 		parserContext.registerComponent(new BeanComponentDefinition(holder));
 	}
 

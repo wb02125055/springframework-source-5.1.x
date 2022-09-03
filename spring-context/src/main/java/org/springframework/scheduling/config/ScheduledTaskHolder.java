@@ -30,6 +30,7 @@ public interface ScheduledTaskHolder {
 
 	/**
 	 * Return an overview of the tasks that have been scheduled by this instance.
+	 * 返回当前已经被调度的任务实例
 	 */
 	Set<ScheduledTask> getScheduledTasks();
 

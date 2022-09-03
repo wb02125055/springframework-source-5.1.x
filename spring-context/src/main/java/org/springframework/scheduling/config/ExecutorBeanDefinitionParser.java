@@ -40,15 +40,20 @@ public class ExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 
 	@Override
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
+		// 解析keep-alive属性
 		String keepAliveSeconds = element.getAttribute("keep-alive");
 		if (StringUtils.hasText(keepAliveSeconds)) {
 			builder.addPropertyValue("keepAliveSeconds", keepAliveSeconds);
 		}
+		// 解析线程池的队列大小属性queue-capacity
 		String queueCapacity = element.getAttribute("queue-capacity");
 		if (StringUtils.hasText(queueCapacity)) {
 			builder.addPropertyValue("queueCapacity", queueCapacity);
 		}
+		// 配置线程池的拒绝策略
 		configureRejectionPolicy(element, builder);
+
+		// 解析线程池的核心线程数
 		String poolSize = element.getAttribute("pool-size");
 		if (StringUtils.hasText(poolSize)) {
 			builder.addPropertyValue("poolSize", poolSize);
@@ -56,12 +61,17 @@ public class ExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 	}
 
 	private void configureRejectionPolicy(Element element, BeanDefinitionBuilder builder) {
+		// 解析线程池的拒绝策略 abort-policy
 		String rejectionPolicy = element.getAttribute("rejection-policy");
+		// 如果没有设置，直接返回，后面会使用默认的线程池拒绝策略
 		if (!StringUtils.hasText(rejectionPolicy)) {
 			return;
 		}
+
 		String prefix = "java.util.concurrent.ThreadPoolExecutor.";
 		String policyClassName;
+
+		// 根据ThreadPoolExecutor中的拒绝策略名称组装对应的拒绝策略的类全限定名
 		if (rejectionPolicy.equals("ABORT")) {
 			policyClassName = prefix + "AbortPolicy";
 		}

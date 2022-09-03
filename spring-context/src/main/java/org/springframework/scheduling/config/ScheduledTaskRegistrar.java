@@ -122,6 +122,7 @@ public class ScheduledTaskRegistrar implements ScheduledTaskHolder, Initializing
 	 */
 	public void setTriggerTasks(Map<Runnable, Trigger> triggerTasks) {
 		this.triggerTasks = new ArrayList<>();
+		// 注册所有TriggerTask
 		triggerTasks.forEach((task, trigger) -> addTriggerTask(new TriggerTask(task, trigger)));
 	}
 
@@ -257,6 +258,7 @@ public class ScheduledTaskRegistrar implements ScheduledTaskHolder, Initializing
 	 * Add a Runnable task to be triggered per the given cron expression.
 	 */
 	public void addCronTask(Runnable task, String expression) {
+		// 注册CronTask
 		addCronTask(new CronTask(task, expression));
 	}
 
