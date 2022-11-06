@@ -23,7 +23,6 @@ public class TestMain {
 
 		MathCalculator mathCalculator = acx.getBean(MathCalculator.class);
 		mathCalculator.div(2, 1);
-//		mathCalculator.add(1,2);
 		mathCalculator.sub();
 //		TestController testController = acx.getBean(TestController.class);
 //		testController.test("wangbing");
