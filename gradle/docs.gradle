@@ -155,7 +155,7 @@ task schemaZip(type: Zip) {
 
 		for (def key : schemas.keySet()) {
 			def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
-			assert shortName != key
+			// assert shortName != key
 			File xsdFile = subproject.sourceSets.main.resources.find {
 //				it.path.endsWith(schemas.get(key).replaceAll('\\/','\\\\'))
 				it.path.endsWith(schemas.get(key))
