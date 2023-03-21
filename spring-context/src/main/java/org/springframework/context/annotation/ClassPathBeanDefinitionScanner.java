@@ -79,6 +79,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 * of a {@code BeanDefinitionRegistry}
 	 */
 	public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry) {
+		// useDefaultFilters为true，表示会在includeFilters中注册@Component和@ManagedBean注解对应的filter，在解析注解的时候会使用到
 		this(registry, true);
 	}
 

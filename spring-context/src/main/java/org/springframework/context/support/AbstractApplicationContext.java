@@ -188,7 +188,7 @@ public abstract class AbstractApplicationContext
 	/**
 	 * 资源文件解析器。是一个用来解析文件资源的策略接口
 	 */
-	private ResourcePatternResolver resourcePatternResolver;
+	private final ResourcePatternResolver resourcePatternResolver;
 	/**
 	 * 用来管理Spring容器中Bean生命周期的处理器，包括：onRefresh方法和onClose方法
 	 * 该接口继承自LifeCycle接口，LifeCycle接口中包括的方法有：start，stop，isRunning
@@ -627,7 +627,7 @@ public abstract class AbstractApplicationContext
 				 *
 				 * 比如：AbstractRefreshableWebApplicationContext中onRefresh方法用来初始化主题能力.
 				 *
-				 * SpringBoot也是在改步骤中启动内嵌Tomcat容器的
+				 * SpringBoot也是在该步骤中启动内嵌Tomcat容器的
 				 */
 				onRefresh();
 
@@ -753,6 +753,7 @@ public abstract class AbstractApplicationContext
 		 *  刷新Bean工厂时会进行bean定义的加载操作。
 		 */
 		refreshBeanFactory();
+		// 这个方法是本类中定义的一个抽象方法，是一个模板方法，具体的实现在子类中
 		return getBeanFactory();
 	}
 
@@ -1046,7 +1047,9 @@ public abstract class AbstractApplicationContext
 		Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
 		this.earlyApplicationEvents = null;
 		if (earlyEventsToProcess != null) {
+			// earlyApplicationEvents如果不为空的话，则进行事件的派发
 			for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
+				// 调用时间派发器进行事件的派发操作
 				getApplicationEventMulticaster().multicastEvent(earlyEvent);
 			}
 		}

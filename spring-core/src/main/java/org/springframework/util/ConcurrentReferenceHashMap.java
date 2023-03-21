@@ -331,7 +331,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
 				return false;
 			}
 		});
-		return (result == Boolean.TRUE);
+		return (result.equals(Boolean.TRUE));
 	}
 
 	@Override

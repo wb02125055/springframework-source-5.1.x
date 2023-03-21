@@ -158,6 +158,7 @@ public class AnnotatedBeanDefinitionReader {
 	public void register(Class<?>... componentClasses) {
 		// 配置类可以传入多个，依次注册传入的配置类.
 		for (Class<?> componentClass : componentClasses) {
+			// 注册传入的配置类
 			registerBean(componentClass);
 		}
 	}
